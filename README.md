@@ -1,6 +1,7 @@
 # NextUI
 
 ## Simple graphical shell for Minecraft's ComputerCraft Advanced Computers
+![obraz](https://github.com/bwisniewski26/nextui/assets/148913398/57573686-93c4-42ac-9412-2ab3770721ed)
 
 Features:
 - integrated graphical file explorer
