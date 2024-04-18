@@ -21,6 +21,44 @@ local function pdp(...) return paintutils.drawPixel(...) end
 args = {...}
 w, h = term.getSize()
 
+function loadSettings()
+	if not fse("/os/main/.settings") then
+		settingsFile = fs.open("/os/main/.settings", "w")
+		settingsFile.write(textutils.serialize(settings))
+		settingsFile.close()
+	else 
+		settingsFile = fs.open("/os/main/.settings", "r")
+		settings = textutils.unserialize(settingsFile.readAll())
+		settingsFile.close()
+	end
+	return settings
+end
+
+settings = {["check_updates"] = true, ["sound"] = false, ["background_color"] = 512, ["modem"] = false, ["animations"] = true, ["lang"] = 1}
+languages = {"pl.lua", "eng.lua"}
+
+settings = loadSettings()
+
+function loadLang()
+
+	local file = fs.open("/os/lang/"..languages[settings["lang"]], "r")
+	lines = {}
+
+	while true do
+		local line = file.readLine()
+	  
+		if not line then break end
+	  
+		lines[#lines + 1] = line
+	  end
+
+	return lines
+end
+
+systemMessages = loadLang()
+if (systemMessages == nil) then
+	error("Nie wczytano jezyka!")
+end
 function ile_folderow(sciezka)
 	local files = fs.list(sciezka)
 	ile = 0
@@ -49,7 +87,7 @@ function wyswietl_pliki(sciezka, y)
 	sbc(colors.black)
 	stc(colors.white)
 	scp(1,1)
-	if pocket then p("< Obecna sciezka: ", fs.getDir(sciezka), sciezka) else p("< NextExplorer 1.1. Obecna sciezka: ", sciezka) end
+	if pocket then p(systemMessages[49] .. " " .. fs.getDir(sciezka), sciezka) else p(systemMessages[50] .. " " .. sciezka) end
 	scp(w,1)
 	p("X")
 	local files = fs.list(sciezka)
@@ -77,7 +115,7 @@ function wyswietl_pliki(sciezka, y)
 	y = y+1
 	end
 	scp(1,h)
-	write("Pomoc|Idz|Nowy")
+	write(systemMessages[51])
 
 
 end
@@ -92,10 +130,10 @@ function popup(sciezka, plik, arg)
 		pfb(1,h-5,15,h-1,colors.white)
 		stc(colors.black)
 		scp(1,h-5)
-		p("Uruchom")
-		p("Edytuj")
-		p("Usun")
-		p("Kopiuj")
+		p(systemMessages[52])
+		p(systemMessages[53])
+		p(systemMessages[54])
+		p(systemMessages[55])
 		klik = mysz()
 		if klik[1]>0 and klik[1]<16 and klik[2] == h-5 then
 			status = shell.run(fs.combine(sciezka,plik))
@@ -111,7 +149,7 @@ function popup(sciezka, plik, arg)
 			scp(1,2)
 			sbc(colors.white)
 			stc(colors.black)
-			write("Podaj nowa sciezke: ")
+			write(systemMessages[56])
 			nowa_sciezka = read()
 			if fse(fs.combine(sciezka,nowa_sciezka)) then
 				fs.copy(fs.combine(sciezka,plik), fs.combine(sciezka,nowa_sciezka))
@@ -122,18 +160,18 @@ function popup(sciezka, plik, arg)
 		pfb(1,h-4, 15, h-4, colors.lightGray)
 		scp(1,h-4)
 		stc(colors.white)
-		write("Nowy")
+		p(systemMessages[57])
 		pfb(1,h-3,15,h-1,colors.white)
 		stc(colors.black)
 		scp(1,h-3)
-		p("Nowy folder")
-		p("Nowy plik")
+		p(systemMessages[58])
+		p(systemMessages[59])
 		klik = mysz()
 		if klik[1]>0 and klik[1]<16 and klik[2] == h-3 then
 			scp(1,2)
 			sbc(colors.white)
 			stc(colors.black)
-			write("Podaj nazwe nowego folderu: ")
+			p(systemMessages[60])
 			nowy_folder = read()
 			fs.makeDir(fs.combine(sciezka,nowy_folder))
 		end
@@ -141,7 +179,7 @@ function popup(sciezka, plik, arg)
 			scp(1,2)
 			sbc(colors.white)
 			stc(colors.black)
-			write("Podaj nazwe nowego pliku: ")
+			write(tostring(systemMessages[61]))
 			nowy_plik = read()
 			shell.setDir("/")
 			plik = fs.combine(sciezka,nowy_plik)
@@ -208,17 +246,15 @@ function pomoc(sciezka)
 	scp(w,1)
 	p("X")
 	scp(1,2)
-print[[
-Witamy w NextExplorer 1.1!
-Podstawowe sterowanie programem:
-- lewy przycisk myszy - wejscie do katalogu/wykonanie pliku
-- prawy przycisk myszy - edycja wskazanego pliku
-- Zakladka Plik - tworzenie/usuwanie plikow/folderow
-- znak < - cofniecie do poprzedniego katalogu
-- znak X - wyjscie z programu/zamkniecie zakladki
-]]
-klik = mysz()
-if (klik[1] == w and klik[2] == 1) then main(sciezka) end
+	p(systemMessages[62])
+	p(systemMessages[63])
+	p(systemMessages[64])
+	p(systemMessages[65])
+	p(systemMessages[66])
+	p(systemMessages[67])
+	p(systemMessages[68])
+	klik = mysz()
+	if (klik[1] == w and klik[2] == 1) then main(sciezka) end
 end
 
 
@@ -248,7 +284,7 @@ w, h = term.getSize()
 		end
 		if (klik[1]>6 and klik[1]<11 and klik[2] == h) then
 			scp(1,2)
-			write("Podaj nowa sciezke: ")
+			write(tostring(69))
 			nazwa = read()
 			if fs.isDir(nazwa) == true then main(nazwa) end
 		end
@@ -287,7 +323,7 @@ w, h = term.getSize()
 							stc(colors.white)
 							scp(1,2)
 							arg_lua = string.sub(arg[klik_y], 1, 6)
-							if arg_lua ~= "luaide" then p[[Program zakonczyl prace. Jesli nie stalo sie to niespodziewanie, zignoruj ten komunikat. W przypadku problemow skontaktuj sie z autorem oprogramowania.]] end
+							if arg_lua ~= "luaide" then p(systemMessages[70]) end
 							s(1)
 							break
 						end
