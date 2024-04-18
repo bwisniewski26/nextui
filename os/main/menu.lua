@@ -18,12 +18,30 @@ local function su(...) return os.shutdown(...) end
 local function re(...) return os.reboot(...) end
 local function pdp(...) return paintutils.drawPixel(...) end
 -- Domyslne wartosci
-settings = {["check_updates"] = true, ["sound"] = false, ["background_color"] = 512, ["modem"] = false, ["animations"] = true}
+settings = {["check_updates"] = true, ["sound"] = false, ["background_color"] = 512, ["modem"] = false, ["animations"] = true, ["lang"] = 1}
+languages = {"pl.lua", "eng.lua"}
 w,h = term.getSize()
 mon = false
 args = {...}
 
 if not fse("/user") then fs.makeDir("/user") end
+
+function loadLang()
+
+	local file = fs.open("/os/lang/"..languages[settings["lang"]], "r")
+	lines = {}
+
+	while true do
+		local line = file.readLine()
+	  
+		if not line then break end
+	  
+		lines[#lines + 1] = line
+	  end
+
+	return lines
+end
+	  
 
 function nilToBrak(str)
 	if str == nil then str = "Brak" end
@@ -179,28 +197,28 @@ function popUp(msg)
 	scp(middleW-20, middleH-2)
 	stc(colors.black)
 	if msg == "disk_insert" then
-		p("Wykryto i zamontowano dyskietke!")
+		p(systemMessages[1])
 	elseif msg == "disk_eject" then
-		p("Dyskietka zostala wyjeta i odmontowana.")
+		p(systemMessages[2])
 	elseif msg == "update" then
-		p("Nowsza wersja systemu zostala znaleziona.")
+		p(systemMessages[3])
 		scp(middleW-20, middleH-1)
-		p("Zaktualizuj system w Ustawieniach.")
+		p(systemMessages[4])
 	elseif msg == "monitor_found" then
-		p("Wykryto monitor zewnetrzny.")
+		p(systemMessages[5])
 		scp(middleW-20, middleH-1)
-		p("Czy chcesz zastapic monitor wewnetrzny?")
+		p(systemMessages[6])
 	end
 	pfb(middleW-20, middleH-3, middleW+20, middleH-3, colors.blue)
 	scp(middleW-20, middleH-3)
 	stc(colors.white)
 	if msg == "disk_insert" or msg == "disk_eject" then
-		p("Dyskietka")
+		p(systemMessages[7])
 	elseif msg == "update" then
-		print("Dostepna aktualizacja")
+		print(systemMessages[8])
 		updateAvailable = 0
 	elseif msg == "monitor_found" then
-		p("Znaleziono monitor")
+		p(systemMessages[9])
 	end
 	pfb(middleW-20, middleH+3, middleW-19, middleH+3, colors.gray)
 	scp(middleW-20, middleH+3)
@@ -208,7 +226,7 @@ function popUp(msg)
 	if msg ~= "monitor_found" then
 		p("OK")
 	else
-		p("TAK")
+		p(systemMessages[10])
 	end
 	soundHandler("pop_up")
 	kolor = get_color()
@@ -221,7 +239,7 @@ function popUp(msg)
 			pfb(1,1,w,h,colors.black)
 			scp(1,1)
 			stc(colors.white)
-			p("Polaczono z monitorem zewnetrznym.")
+			p(systemMessages[11])
 			return 6 
 		end
 		return
@@ -243,26 +261,26 @@ function bsod(powod)
 	sbc(colors.blue)
 	stc(colors.white)
 	scp(1,6)
-	p[[System NextUI napotkal problem i musial zostac zatrzymany. Jesli widzisz ten ekran po raz pierwszy poczekaj na ponowny 		rozruch komputera, jednakze jesli blad bedzie sie powtarzal byc moze konieczna bedzie naprawa systemu NextUI. Aby jej dokonac 	uruchom Program Instalacyjny NextUI oraz postepuj z jego wskazowkami.
-	Trwa zbieranie informacji na temat Bledu STOP]]
+	p(systemMessages[12])
+	p(systemMessages[13])
 	s(4)
-	p("Nazwa bledu: ", powod)
+	p(systemMessages[14], powod)
 	p("")
 	p("")
 if (powod == "NextExplorer Missing") then
-	p[[System NextUI nie wykryl obecnosci Eksploratora NextUI. Jest to integralna czesc NextUI 2.1 i jego brak uniemozliwia prace systemu. Nastapi proba naprawy problemu...]]
+	p(systemMessages[15])
 	status = downloadFile("https://pastebin.com/raw/za0ck7T5", "/os/main/explorer")
 	if status == 1 then 
-		p[[Pomyslnie pobrano plik.]]
+		p(systemMessages[16])
 	else
-		p[[Nie udalo sie pobrac pliku. System nie zostal naprawiony. Opuszczanie NextUI....]]
+		p(systemMessages[17])
 		p("")
 		error("Explorer missing.")
 	end
 	s(1)
 	end
 	s(10)
-	p("Ponowne uruchamianie...")
+	p(systemMessages[18])
 end
 
 function get_color()
@@ -366,7 +384,7 @@ function draw(kolor)
 	sbc(kolor)
 	stc(colors.yellow)
 	scp(2,3)
-	p("[[Aplikacje]]")
+	p(systemMessages[19])
 	if fse("/User") then
 		stc(colors.yellow)
 		scp(2,4)
@@ -424,10 +442,10 @@ function start()
 	scp(1,h-4)
 	sbc(colors.black)
 	stc(colors.white)
-	print[[Terminal
-nextStore
-Ustawienia
-CraftOS]]
+	p(systemMessages[20])
+	p(systemMessages[21])
+	p(systemMessages[22])
+	p(systemMessages[23])
 	klik = mysz()
 	if (klik[1]>0 and klik[1]<16 and klik[2] == h-1) then
 			scp(1,1)
@@ -466,16 +484,14 @@ function infust()
 	scp(1,1)
 	sbc(colors.blue)
 	stc(colors.white)
-	p("Informacje NextUI")
+	p(systemMessages[24])
 	sbc(colors.black)
-	p[[
-NextUI 2.1 z NextExplorer
-	]]
-	p("Nazwa komputera: ", os.getComputerLabel())
-	p("Rozdzielczosc ekranu: ", w, "x", h)
+	p(systemMessages[25])
+	p(systemMessages[26], os.getComputerLabel())
+	p(systemMessages[27], w, "x", h)
 	miejsce = math.floor(((fs.getFreeSpace("/")/1024)/1024))
-	p("Wolne miejsce na dysku: ", miejsce, "MB")
-	p("Wersja CraftOS: ", os.version())
+	p(systemMessages[28], miejsce, "MB")
+	p(systemMessages[29], os.version())
 	while true do
 		klik = mysz()
 		if (klik[1] == w and klik[2] == 1) then break end
@@ -503,10 +519,10 @@ function desk_ust()
 	scp(1,1)
 	sbc(colors.blue)
 	stc(colors.white)
-	p("Ustawienia Biurka NextUI")
+	p(systemMessages[31])
 	scp(1,2)
 	sbc(colors.black)
-    p[[Zmien kolor tla biurka]]
+    p(systemMessages[32])
 	klik = mysz()
 	if klik[1] == w and klik[2] == 1 then break end
 	if klik[1]>0 and klik[1]<6 and klik[2] == h then start() end
@@ -562,52 +578,51 @@ function ust()
 	scp(1,1)
 	sbc(colors.blue)
 	stc(colors.white)
-	p("Ustawienia NextUI")
+	p(systemMessages[33])
 	sbc(colors.black)
-    p[[
-Zmien nazwe komputera
-Przywroc komputer do stanu poczatkowego
-Aktualizuj system
-Aktualizuj bootloader
-    ]]
+	p(systemMessages[34])
+	p(systemMessages[35])
+	p(systemMessages[36])
+	p(systemMessages[37])
 	if (settings["check_updates"] == true) then 
 		stc(colors.green) 
 	else 
 		stc(colors.red) 
 	end
 	scp(1,6)
-	p("Sprawdzaj aktualizacje")
+	p(systemMessages[38])
 	if (settings["sound"] == true) then 
 		stc(colors.green) 
 	else 
 		stc(colors.red) 
 	end
 	scp(1,7)
-	p("Rozszerzenie dzwieku")
+	p(systemMessages[39])
 	if (settings["modem"] == true) then 
 		stc(colors.green) 
 	else 
 		stc(colors.red) 
 	end
 	scp(1,8)
-	p("Rozszerzenie sieci")
+	p(systemMessages[40])
 	scp(1,9)
 	if (settings["animations"] == true) then 
 		stc(colors.green) 
 	else 
 		stc(colors.red) 
 	end
-	p("Animacje systemowe")
+	p(systemMessages[41])
+	p(systemMessages[48])
 	scp(1,h-1)
 	stc(colors.white)
-	p("Aby wylaczyc rozszerzenia, odlacz sprzet od PC")
+	p(systemMessages[42])
 	stc(colors.white)
 	while true do
         klik = mysz()
 		if klik[1] == w and klik[2] == 1 then return end
         if klik[1]>0 and klik[1]<25 and klik[2]==2 then
             scp(1,10)
-            write("Podaj nowa nazwe komputera: ")
+            p(systemMessages[43])
             nowa_nazwa = read()
             os.setComputerLabel(nowa_nazwa)
         end
@@ -623,9 +638,9 @@ Aktualizuj bootloader
 				fs.delete("/startup");
 				fs.copy("/.boot_update", "/startup")
 				fs.delete("/.boot_update")
-				p("Zaktualizowano pomyslnie!")
+				p(systemMessages[44])
 				return 0
-			else print("Nie udalo sie zaktualizowac bootloadera. Sprobuj ponownie pozniej")
+			else print(systemMessages[45])
 			end
 		end
 		if klik[1]>0 and klik[1]<25 and klik[2]==6 then
@@ -648,6 +663,19 @@ Aktualizuj bootloader
 				settings["animations"] = true
 				changeSetting(settings)
 				break
+			end
+		end
+		if klik[1]>0 and klik[1]<25 and klik[2] == 10 then
+			if settings["lang"] == 1 then
+				settings["lang"] = 2
+				changeSetting(settings)
+				systemMessages = loadLang()
+				return
+			else
+				settings["lang"] = 1
+				changeSetting(settings)
+				systemMessages = loadLang()
+				return
 			end
 		end
 	end
@@ -690,26 +718,26 @@ while true do
 	stc(colors.white)
 	sbc(colors.blue)
 	if settings["animations"] == true then
-		textutils.slowPrint("Ustawienia NextUI")
+		textutils.slowPrint(systemMessages[33])
 	else
-		p("Ustawienia NextUI")
+		p(systemMessages[33])
 	end
 	pfb(1, 1, w, 1, colors.blue)
 	scp(1,1)
-	p("Ustawienia NextUI")
+	p(systemMessages[33])
 	pdp(w,1, colors.red)
 	pfb(3, 4, 13, 6, colors.orange)
 	scp(3,5)
 	stc(colors.white)
-	p("Informacje")
+	p(systemMessages[46])
 	pfb(27, 4, 37, 6, colors.cyan)
 	scp(27,5)
 	stc(colors.white)
-	p("Biurko")
+	p(systemMessages[47])
 	pfb(15, 4, 25, 6, colors.green)
 	scp(15,5)
 	stc(colors.white)
-	p("Ustawienia")
+	p(systemMessages[22])
 	pfb(39, 4, 49, 6, colors.purple)
 	scp(39,5)
 	stc(colors.white)
@@ -766,6 +794,12 @@ end
 
 
 settings = loadSettings()
+settings["lang"] = 2
+systemMessages = loadLang()
+if systemMessages == nil then
+	bsod("Language not found")
+end
+
 soundHandler(boot)
 tc()
 for i=1,#sides do
