@@ -18,7 +18,7 @@ local function su(...) return os.shutdown(...) end
 local function re(...) return os.reboot(...) end
 local function pdp(...) return paintutils.drawPixel(...) end
 -- Domyslne wartosci
-settings = {["check_updates"] = true, ["sound"] = false, ["background_color"] = 512, ["modem"] = false, ["animations"] = true, ["lang"] = 1}
+settings = {["check_updates"] = true, ["sound"] = false, ["background_color"] = 512, ["modem"] = false, ["animations"] = true, ["lang"] = 2}
 languages = {"pl.lua", "eng.lua"}
 w,h = term.getSize()
 mon = false
@@ -794,7 +794,6 @@ end
 
 
 settings = loadSettings()
-settings["lang"] = 2
 systemMessages = loadLang()
 if systemMessages == nil then
 	bsod("Language not found")
