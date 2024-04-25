@@ -71,7 +71,7 @@ function ile_folderow(sciezka)
 end
 	
 	
-	function ile_plikow(sciezka)
+function ile_plikow(sciezka)
 	local files = fs.list(sciezka)
 	ile = 0
 	for i,file in ipairs(files) do

@@ -626,23 +626,9 @@ function ust()
             nowa_nazwa = read()
             os.setComputerLabel(nowa_nazwa)
         end
-        if klik[1]>0 and klik[1]<25 and klik[2]==3 then
-            r("pastebin run 25ZT2LXr")
+        if klik[1]>0 and klik[1]<25 and klik[2]>=3 and klik[2]<=5 then
+            r("wget run https://raw.githubusercontent.com/bwisniewski26/nextui/main/update.lua")
         end
-        if klik[1]>0 and klik[1]<25 and klik[2]==4 then
-            r("pastebin run 8zwg8A47")
-			fs.delete("/os/main/.ver")
-        end
-		if klik[1]>0 and klik[2]<25 and klik[2] == 5 then
-			if (downloadFile("https://pastebin.com/raw/MwpLq4JP", "/.boot_update")) then
-				fs.delete("/startup");
-				fs.copy("/.boot_update", "/startup")
-				fs.delete("/.boot_update")
-				p(systemMessages[44])
-				return 0
-			else print(systemMessages[45])
-			end
-		end
 		if klik[1]>0 and klik[1]<25 and klik[2]==6 then
 			if settings["check_updates"] == true then
 				settings["check_updates"] = false
