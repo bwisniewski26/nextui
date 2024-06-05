@@ -11,10 +11,10 @@ Features:
 - optional system files check on boot
 - external monitor and speakers support
 - simple system animations
+- English and Polish languages built-in
 
 Planned soon-to-be-implemented features:
 - integrated printer and modem support
-- English language
 
 
 Included software:
