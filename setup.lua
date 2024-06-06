@@ -22,19 +22,19 @@ local function pdp(...) return paintutils.drawPixel(...) end
  
 w, h = term.getSize()
  
-pliki = {"https://raw.githubusercontent.com/bwisniewski26/nextui/main/startup.lua", "https://raw.githubusercontent.com/bwisniewski26/nextui/main/os/main/terminal.lua", "https://raw.githubusercontent.com/bwisniewski26/nextui/main/os/main/menu.lua", "https://raw.githubusercontent.com/bwisniewski26/nextui/main/os/main/explorer.lua", "https://raw.githubusercontent.com/bwisniewski26/nextui/main/os/lang/eng.lua", "https://raw.githubusercontent.com/bwisniewski26/nextui/main/os/lang/pl.lua", "https://raw.githubusercontent.com/bwisniewski26/nextui/main/os/luaide.lua"}
+pliki = {"https://raw.githubusercontent.com/bwisniewski26/nextui/main/startup.lua", "https://raw.githubusercontent.com/bwisniewski26/nextui/main/os/main/terminal.lua", "https://raw.githubusercontent.com/bwisniewski26/nextui/main/os/main/menu.lua", "https://raw.githubusercontent.com/bwisniewski26/nextui/main/os/main/explorer.lua", "https://raw.githubusercontent.com/bwisniewski26/nextui/main/os/lang/eng.lua", "https://raw.githubusercontent.com/bwisniewski26/nextui/main/os/lang/pl.lua"}
  
-function downloadFile(url, sciezka)
+function downloadFile(url, path)
     local response = http.get(url)
     if response then
         local fileContent = response.readAll()
         response.close()
         
-        local file = fs.open(sciezka, "w")
+        local file = fs.open(path, "w")
         file.write(fileContent)
         file.close()
     else
-        print("Setup failed to download file from url: " .. url .. " to path: " .. sciezka)
+        print("Setup failed to download file from url: " .. url .. " to path: " .. path)
     end
 end
  
@@ -121,7 +121,6 @@ function install()
     sbc(colors.yellow)
     stc(colors.yellow)
     sp("***")
-    downloadFile(pliki[7], "/os/luaide")
     s(1)
     installStage2()
 end
