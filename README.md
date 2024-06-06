@@ -15,7 +15,3 @@ Features:
 
 Planned soon-to-be-implemented features:
 - integrated printer and modem support
-
-
-Included software:
-LuaIDE - an in-game IDE for ComputerCraft (https://github.com/benanders/LuaIDE)
