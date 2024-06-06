@@ -59,17 +59,17 @@ systemMessages = loadLang()
 if (systemMessages == nil) then
 	error("Nie wczytano jezyka!")
 end
-function ile_folderow(path)
-	local files = fs.list(path)
-	ile = 0
+
+function folderCount(path)
+	local folders = fs.list(path)
+	folderCount = 0
 	for i,file in ipairs(files) do
 		if fs.isDir(fs.combine(path,file)) then
-				ile = ile+1
+			folderCount = folderCount+1
 		end
 	end
-	return ile
+	return folderCount
 end
-	
 	
 function countFiles(path)
 	local files = fs.list(path)
@@ -283,11 +283,11 @@ function main(path)
 					tc()
 					status = shell.run(arg[mouse_button_y])
 					if status == false then
-							logi = fs.open("/os/logs", "a")
-							logi.writeLine("------")
-							logi.writeLine("error while running file")
-							logi.writeLine("------")
-							logi.close()
+							logs = fs.open("/os/logs", "a")
+							logs.writeLine("------")
+							logs.writeLine("error while running file")
+							logs.writeLine("------")
+							logs.close()
 							sbc(colors.black)
 							tc()
 							sbc(colors.black)
