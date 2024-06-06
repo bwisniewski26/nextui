@@ -59,44 +59,44 @@ systemMessages = loadLang()
 if (systemMessages == nil) then
 	error("Nie wczytano jezyka!")
 end
-function ile_folderow(sciezka)
-	local files = fs.list(sciezka)
-	ile = 0
+
+function folderCount(path)
+	local folders = fs.list(path)
+	folderCount = 0
 	for i,file in ipairs(files) do
-		if fs.isDir(fs.combine(sciezka,file)) then
-				ile = ile+1
+		if fs.isDir(fs.combine(path,file)) then
+			folderCount = folderCount+1
 		end
 	end
-	return ile
+	return folderCount
 end
 	
-	
-function ile_plikow(sciezka)
-	local files = fs.list(sciezka)
-	ile = 0
+function countFiles(path)
+	local files = fs.list(path)
+	fileCount = 0
 	for i,file in ipairs(files) do
-		ile = ile+1
+		fileCount = fileCount+1
 	end
-	return ile
+	return fileCount
 end
 
-function wyswietl_pliki(sciezka, y)
+function showFiles(path, y)
 	temp = y
 	sbc(colors.black)
 	tc()
 	sbc(colors.black)
 	stc(colors.white)
 	scp(1,1)
-	if pocket then p(systemMessages[49] .. " " .. fs.getDir(sciezka), sciezka) else p(systemMessages[50] .. " " .. sciezka) end
+	if pocket then p(systemMessages[49] .. " " .. fs.getDir(path), path) else p(systemMessages[50] .. " " .. path) end
 	scp(w,1)
 	p("X")
-	local files = fs.list(sciezka)
+	local files = fs.list(path)
 	j = 1
 	for i,file in ipairs(files) do
 		if ((h-3)*j <= i) then j = j+1 y = temp end
 		scp(2+((j-1)*10),y)
-		if fs.isDir(fs.combine(sciezka,file)) then
-			if fs.isDir(fs.combine(sciezka,file)) == "os/main/" then
+		if fs.isDir(fs.combine(path,file)) then
+			if fs.isDir(fs.combine(path,file)) == "os/main/" then
 				stc(colors.red)
 				file = string.sub(file, 1, 9)
 				term.write("[["..file.."]]")
@@ -107,7 +107,7 @@ function wyswietl_pliki(sciezka, y)
 			term.write("[["..file.."]]")
 			stc(colors.white)
 		else
-			if sciezka == "os/main" or file == "startup" then stc(colors.red) end
+			if path == "os/main" or file == "startup" then stc(colors.red) end
 			file = string.sub(file, 1, 9)
 			term.write(file)
 			stc(colors.white)
@@ -120,12 +120,12 @@ function wyswietl_pliki(sciezka, y)
 
 end
 
-function popup(sciezka, plik, arg)
-	if (plik ~= nil) then
+function popup(path, file, arg)
+	if (file ~= nil) then
 		pfb(1,h-6, 15, h-6, colors.lightGray)
 		scp(1,h-6)
 		stc(colors.white)
-		str = string.sub(fs.combine(sciezka,plik), 1, 15)
+		str = string.sub(fs.combine(path,file), 1, 15)
 		write(str)
 		pfb(1,h-5,15,h-1,colors.white)
 		stc(colors.black)
@@ -134,25 +134,25 @@ function popup(sciezka, plik, arg)
 		p(systemMessages[53])
 		p(systemMessages[54])
 		p(systemMessages[55])
-		klik = mysz()
-		if klik[1]>0 and klik[1]<16 and klik[2] == h-5 then
-			status = shell.run(fs.combine(sciezka,plik))
+		mouse_button = retrieveMouseClickInfo()
+		if mouse_button[1]>0 and mouse_button[1]<16 and mouse_button[2] == h-5 then
+			status = shell.run(fs.combine(path,file))
 		end
-		if klik[1]>0 and klik[1]<16 and klik[2] == h-4 then
+		if mouse_button[1]>0 and mouse_button[1]<16 and mouse_button[2] == h-4 then
 			shell.setDir("/")
-			shell.run("/os/luaide", fs.combine(sciezka,plik))
+			shell.run("edit", fs.combine(path,file))
 		end
-		if klik[1]>0 and klik[1]<16 and klik[2] == h-3 then
-			fs.delete(fs.combine(sciezka,plik))
+		if mouse_button[1]>0 and mouse_button[1]<16 and mouse_button[2] == h-3 then
+			fs.delete(fs.combine(path,file))
 		end
-		if klik[1]>0 and klik[1]<16 and klik[2] == h-2 then
+		if mouse_button[1]>0 and mouse_button[1]<16 and mouse_button[2] == h-2 then
 			scp(1,2)
 			sbc(colors.white)
 			stc(colors.black)
 			write(systemMessages[56])
-			nowa_sciezka = read()
-			if fse(fs.combine(sciezka,nowa_sciezka)) then
-				fs.copy(fs.combine(sciezka,plik), fs.combine(sciezka,nowa_sciezka))
+			new_path = read()
+			if fse(fs.combine(path,new_path)) then
+				fs.copy(fs.combine(path,file), fs.combine(path,new_path))
 			end
 		end
 
@@ -166,62 +166,33 @@ function popup(sciezka, plik, arg)
 		scp(1,h-3)
 		p(systemMessages[58])
 		p(systemMessages[59])
-		klik = mysz()
-		if klik[1]>0 and klik[1]<16 and klik[2] == h-3 then
+		mouse_button = retrieveMouseClickInfo()
+		if mouse_button[1]>0 and mouse_button[1]<16 and mouse_button[2] == h-3 then
 			scp(1,2)
 			sbc(colors.white)
 			stc(colors.black)
 			p(systemMessages[60])
 			nowy_folder = read()
-			fs.makeDir(fs.combine(sciezka,nowy_folder))
+			fs.makeDir(fs.combine(path,nowy_folder))
 		end
-		if klik[1]>0 and klik[1]<16 and klik[2] == h-2 then
+		if mouse_button[1]>0 and mouse_button[1]<16 and mouse_button[2] == h-2 then
 			scp(1,2)
 			sbc(colors.white)
 			stc(colors.black)
 			write(tostring(systemMessages[61]))
 			nowy_plik = read()
 			shell.setDir("/")
-			plik = fs.combine(sciezka,nowy_plik)
-			r("/os/luaide", plik)
+			plik = fs.combine(path,nowy_plik)
+			r("edit", plik)
 		end
 	end
 
 	return
 end
 
-function wyswietl_foldery(sciezka, y)
-	local files = fs.list(sciezka)
-	for i,file in ipairs(files) do
-		scp(2,y)
-		if fs.isDir(fs.combine(sciezka,file)) then
-			stc(colors.yellow)
-			term.write("[["..file.."]]")
-			stc(colors.white)
-		end
-	y = y+1
-	end
-end
-
-function foldery(sciezka)
+function listFiles(path)
 arg = {}
-local files = fs.list(sciezka)
-y = 1
-for i,file in ipairs(files) do
-    if fs.isDir(fs.combine(sciezka,file)) then
-		arg[y] = file
-    	y = y+1
-	end
-end
-a = 1
-scp(1,10)
-arg[y+1] = y
-return arg
-end
-
-function pliki(sciezka)
-arg = {}
-local files = fs.list(sciezka)
+local files = fs.list(path)
 y = 1
 for i,file in ipairs(files) do
 	arg[y] = file
@@ -233,14 +204,14 @@ arg[y+1] = y
 return arg
 end
 
-function mysz()
- local event, button, x, y = os.pullEvent("mouse_click")
-klik = {x, y, button}
-return klik
+function retrieveMouseClickInfo()
+	local event, button, x, y = os.pullEvent("mouse_click")
+	mouse_button = {x, y, button}
+	return mouse_button
 end
 
 
-function pomoc(sciezka)
+function Help(path)
 	tc()
 	w, h = term.getSize()
 	scp(w,1)
@@ -253,76 +224,76 @@ function pomoc(sciezka)
 	p(systemMessages[66])
 	p(systemMessages[67])
 	p(systemMessages[68])
-	klik = mysz()
-	if (klik[1] == w and klik[2] == 1) then main(sciezka) end
+	mouse_button = retrieveMouseClickInfo()
+	if (mouse_button[1] == w and mouse_button[2] == 1) then main(path) end
 end
 
 
-function main(sciezka) 
-while true do
-shell.setDir(sciezka)
-w, h = term.getSize()
-		wyswietl_pliki(sciezka, 3)
-		arg = pliki(sciezka)
-		ile = ile_plikow(sciezka)
+function main(path) 
+	while true do
+	shell.setDir(path)
+	w, h = term.getSize()
+		showFiles(path, 3)
+		arg = listFiles(path)
+		ile = countFiles(path)
 		
-		klik = mysz()
-		-- klik_y = klik[2]-2
-		if (klik[1]<11) then 
-			klik_y = klik[2] - 2
-		elseif (klik[1]>10 and klik[1]<21) then
-			klik_y = (math.floor(klik[1]/10)*10)+klik[2]+3
-		elseif (klik[1]>20 and klik[1]<31) then
-			klik_y = (math.floor(klik[1]/10)*10)+klik[2]+9
-		elseif (klik[1]>30 and klik[1]<41) then
-			klik_y = (math.floor(klik[1]/10)*10)+klik[2]+15
-		elseif (klik[1]>40 and klik[1]<51) then
-			klik_y = (math.floor(klik[1]/10)*10)+klik[2]+21
+		mouse_button = retrieveMouseClickInfo()
+		-- mouse_button_y = mouse_button[2]-2
+		if (mouse_button[1]<11) then 
+			mouse_button_y = mouse_button[2] - 2
+		elseif (mouse_button[1]>10 and mouse_button[1]<21) then
+			mouse_button_y = (math.floor(mouse_button[1]/10)*10)+mouse_button[2]+3
+		elseif (mouse_button[1]>20 and mouse_button[1]<31) then
+			mouse_button_y = (math.floor(mouse_button[1]/10)*10)+mouse_button[2]+9
+		elseif (mouse_button[1]>30 and mouse_button[1]<41) then
+			mouse_button_y = (math.floor(mouse_button[1]/10)*10)+mouse_button[2]+15
+		elseif (mouse_button[1]>40 and mouse_button[1]<51) then
+			mouse_button_y = (math.floor(mouse_button[1]/10)*10)+mouse_button[2]+21
 		end
-		if (klik[1]>1 and klik[1]<5 and klik[2] == h) then
-			pomoc(sciezka)
+		if (mouse_button[1]>1 and mouse_button[1]<5 and mouse_button[2] == h) then
+			Help(path)
 		end
-		if (klik[1]>6 and klik[1]<11 and klik[2] == h) then
+		if (mouse_button[1]>6 and mouse_button[1]<11 and mouse_button[2] == h) then
 			scp(1,2)
-			write(tostring(69))
-			nazwa = read()
-			if fs.isDir(nazwa) == true then main(nazwa) end
+			write(".>")
+			name = read()
+			if fs.isDir(name) == true then main(name) end
 		end
-		if (klik[1] > 11 and klik[1] < 16 and klik[2] == h) then
-			popup(sciezka, nil, arg)
+		if (mouse_button[1] > 11 and mouse_button[1] < 16 and mouse_button[2] == h) then
+			popup(path, nil, arg)
 		end
-		if (klik[1] == w and klik[2] == 1) then error() end
-		if (klik[1] == 1 and klik[2] == 1) then
-			sciezka = fs.getDir(sciezka)
-			if (sciezka == "") then sciezka = "/" end
+		if (mouse_button[1] == w and mouse_button[2] == 1) then error() end
+		if (mouse_button[1] == 1 and mouse_button[2] == 1) then
+			path = fs.getDir(path)
+			if (path == "") then path = "/" end
 			break
 		end
-		if (klik[1]>0 and klik[1]<w and klik_y<ile+1 and klik_y>0 and klik[3] == 2) then
-			if fs.exists(fs.combine(sciezka,arg[klik_y])) then
-				popup(sciezka, arg[klik_y])
+		if (mouse_button[1]>0 and mouse_button[1]<w and mouse_button_y<ile+1 and mouse_button_y>0 and mouse_button[3] == 2) then
+			if fs.exists(fs.combine(path,arg[mouse_button_y])) then
+				popup(path, arg[mouse_button_y])
 				break
 			end
 		end
-		if (klik[1]>0 and klik[1]<w and klik_y<ile+1 and klik_y>0 and klik[3] == 1) then
-			if fs.isDir(fs.combine(sciezka,arg[klik_y])) then
-				sciezka = fs.combine(sciezka,arg[klik_y])
-				main(sciezka)
+		if (mouse_button[1]>0 and mouse_button[1]<w and mouse_button_y<ile+1 and mouse_button_y>0 and mouse_button[3] == 1) then
+			if fs.isDir(fs.combine(path,arg[mouse_button_y])) then
+				path = fs.combine(path,arg[mouse_button_y])
+				main(path)
 			else
-				if fs.exists(fs.combine(sciezka,arg[klik_y])) then
+				if fs.exists(fs.combine(path,arg[mouse_button_y])) then
 					tc()
-					status = shell.run(arg[klik_y])
+					status = shell.run(arg[mouse_button_y])
 					if status == false then
-							logi = fs.open("/os/logs", "a")
-							logi.writeLine("------")
-							logi.writeLine("error while running file")
-							logi.writeLine("------")
-							logi.close()
+							logs = fs.open("/os/logs", "a")
+							logs.writeLine("------")
+							logs.writeLine("error while running file")
+							logs.writeLine("------")
+							logs.close()
 							sbc(colors.black)
 							tc()
 							sbc(colors.black)
 							stc(colors.white)
 							scp(1,2)
-							arg_lua = string.sub(arg[klik_y], 1, 6)
+							arg_lua = string.sub(arg[mouse_button_y], 1, 6)
 							if arg_lua ~= "luaide" then p(systemMessages[70]) end
 							s(1)
 							break
@@ -332,8 +303,8 @@ w, h = term.getSize()
 		end
 	end
 end
-sciezka = "/"
+path = "/"
 shell.setDir("/")
 while true do
-if (args[1] == nil) then main(sciezka) else main(args[1]) end
+if (args[1] == nil) then main(path) else main(args[1]) end
 end

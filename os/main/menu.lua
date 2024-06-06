@@ -18,7 +18,7 @@ local function su(...) return os.shutdown(...) end
 local function re(...) return os.reboot(...) end
 local function pdp(...) return paintutils.drawPixel(...) end
 -- Domyslne wartosci
-settings = {["check_updates"] = true, ["sound"] = false, ["background_color"] = 512, ["modem"] = false, ["animations"] = true, ["lang"] = 2}
+settings = {["check_updates"] = true, ["sound"] = false, ["background_color"] = 512, ["modem"] = false, ["animations"] = true, ["lang"] = 2, ["shell"] = false}
 languages = {"pl.lua", "eng.lua"}
 w,h = term.getSize()
 mon = false
@@ -43,20 +43,20 @@ function loadLang()
 end
 	  
 
-function nilToBrak(str)
-	if str == nil then str = "Brak" end
+function nilToNotFound(str)
+	if str == nil then str = "X" end
 	return str
 end
 
 function findPeripherals()
 	peripherals = {}
 	
-	peripherals[1] = nilToBrak(peripheral.getType("top"))
-	peripherals[2] = nilToBrak(peripheral.getType("bottom"))
-	peripherals[3] = nilToBrak(peripheral.getType("left"))
-	peripherals[4] = nilToBrak(peripheral.getType("right"))
-	peripherals[5] = nilToBrak(peripheral.getType("front"))
-	peripherals[6] = nilToBrak(peripheral.getType("back"))
+	peripherals[1] = nilToNotFound(peripheral.getType("top"))
+	peripherals[2] = nilToNotFound(peripheral.getType("bottom"))
+	peripherals[3] = nilToNotFound(peripheral.getType("left"))
+	peripherals[4] = nilToNotFound(peripheral.getType("right"))
+	peripherals[5] = nilToNotFound(peripheral.getType("front"))
+	peripherals[6] = nilToNotFound(peripheral.getType("back"))
 
 	return peripherals
 end
@@ -160,7 +160,7 @@ end
 
 -- Zmienne ogolne --
 
-kolory = {"1", "2", "8", "32", "64", "128", "256", "512", "1024", "2048", "4096", "8192", "16384", "32768"}
+colory = {"1", "2", "8", "32", "64", "128", "256", "512", "1024", "2048", "4096", "8192", "16384", "32768"}
 floppy = 0
 peripherals = findPeripherals()
 updateAvailable = 0 --checkVersion()
@@ -229,8 +229,8 @@ function popUp(msg)
 		p(systemMessages[10])
 	end
 	soundHandler("pop_up")
-	kolor = get_color()
-	klik = mysz()
+	color = get_color()
+	klik = mouseClick()
 	if msg ~= "monitor_found" then
 		if klik[2] == middleH+3 and klik[1] > middleW-21 and klik[1] < middleW-18 then s(0.1) end
 	else
@@ -247,7 +247,7 @@ function popUp(msg)
 	return
 end
 
-function bsod(powod)
+function bsod(reason)
 	soundHandler(critical_error)
 	sbc(colors.blue)
 	tc()
@@ -264,10 +264,10 @@ function bsod(powod)
 	p(systemMessages[12])
 	p(systemMessages[13])
 	s(4)
-	p(systemMessages[14], powod)
+	p(systemMessages[14], reason)
 	p("")
 	p("")
-if (powod == "NextExplorer Missing") then
+if (reason == "NextExplorer Missing") then
 	p(systemMessages[15])
 	status = downloadFile("https://pastebin.com/raw/za0ck7T5", "/os/main/explorer")
 	if status == 1 then 
@@ -284,12 +284,12 @@ if (powod == "NextExplorer Missing") then
 end
 
 function get_color()
-	kolor = settings["background_color"]
-	--if kolor == nil then kolor = 2048 end
-return tonumber(kolor)
+	color = settings["background_color"]
+	--if color == nil then color = 2048 end
+return tonumber(color)
 end
 
-function mysz()
+function mouseClick()
 	local event, button, x, y = os.pullEvent("mouse_click")
     klik = {x, y, button}
     return klik
@@ -339,7 +339,7 @@ scp(2,13)
 p(char2, "Front", peripherals[5])
 scp(2,15)
 p(char2, "Back", peripherals[6])
-klik = mysz()
+klik = mouseClick()
 
 if klik[1] == w and klik[2] == 1 then break end
 if klik[1]>0 and klik[1]<6 and klik[2] == h then start() end
@@ -350,11 +350,11 @@ end
 
 end
 
-function draw(kolor)
-	kolor = get_color()
+function draw(color)
+	color = get_color()
 	local char = "\142"
 	local char2 = "\16"
-	pfb(1,2,w,h-1,kolor)
+	pfb(1,2,w,h-1,color)
 	pfb(1,1,w,1,colors.black)
 	pfb(6,h,w,h,colors.blue)
 	pfb(1,h,5,h,colors.black)
@@ -381,7 +381,7 @@ function draw(kolor)
 	end
 	pdp(w,h,colors.red)
 	pdp(w-1,h,colors.orange)
-	sbc(kolor)
+	sbc(color)
 	stc(colors.yellow)
 	scp(2,3)
 	p(systemMessages[19])
@@ -397,7 +397,7 @@ function draw(kolor)
 	end
 	if fse("/disk") and floppy == 1 then
 		stc(colors.yellow)
-		sbc(kolor)
+		sbc(color)
 		scp(2,6)
 		p("[[Floppy]]")
 	end
@@ -405,7 +405,7 @@ function draw(kolor)
 		floppy = 1
 		popUp("disk_insert")
 		stc(colors.yellow)
-		sbc(kolor)
+		sbc(color)
 		scp(2,6)
 		p("[[Floppy]]")
 	end
@@ -413,8 +413,8 @@ function draw(kolor)
 		floppy = 0
 		popUp("disk_eject")
 		scp(1,6)
-		sbc(kolor)
-		stc(kolor)
+		sbc(color)
+		stc(color)
 		term.clearLine()
 	end
 
@@ -424,7 +424,7 @@ function draw(kolor)
 	end
 end
 
-function mysz()
+function mouseClick()
 if event == "terminate" then
 	error()
 end
@@ -446,7 +446,7 @@ function start()
 	p(systemMessages[21])
 	p(systemMessages[22])
 	p(systemMessages[23])
-	klik = mysz()
+	klik = mouseClick()
 	if (klik[1]>0 and klik[1]<16 and klik[2] == h-1) then
 			scp(1,1)
 			sbc(colors.black)
@@ -493,15 +493,15 @@ function infust()
 	p(systemMessages[28], miejsce, "MB")
 	p(systemMessages[29], os.version())
 	while true do
-		klik = mysz()
+		klik = mouseClick()
 		if (klik[1] == w and klik[2] == 1) then break end
 		if klik[1]>0 and klik[1]<6 and klik[2] == h then start() end
 	end
 end
 
-function kol_plik(kolor)
+function kol_plik(color)
 		desk_col_file = fs.open("/os/desk_color", "w")
-		desk_col_file.write(kolor)
+		desk_col_file.write(color)
 		desk_col_file.close()
 end
 
@@ -523,7 +523,7 @@ function desk_ust()
 	scp(1,2)
 	sbc(colors.black)
     p(systemMessages[32])
-	klik = mysz()
+	klik = mouseClick()
 	if klik[1] == w and klik[2] == 1 then break end
 	if klik[1]>0 and klik[1]<6 and klik[2] == h then start() end
 	if klik[1]>0 and klik[1]<25 and klik[2] == 2 then
@@ -541,9 +541,9 @@ function desk_ust()
 		pdp(11, 7, 4096)
 		pdp(12, 7, 8192)
 		pdp(13, 7, 16384)
-		klik2 = mysz()
+		klik2 = mouseClick()
 
-		settings["background_color"] = kolory[klik2[1]]
+		settings["background_color"] = colory[klik2[1]]
 		changeSetting(settings)
 
 		break
@@ -612,19 +612,20 @@ function ust()
 		stc(colors.red) 
 	end
 	p(systemMessages[41])
+	stc(colors.white)
 	p(systemMessages[48])
 	scp(1,h-1)
 	stc(colors.white)
 	p(systemMessages[42])
 	stc(colors.white)
 	while true do
-        klik = mysz()
+        klik = mouseClick()
 		if klik[1] == w and klik[2] == 1 then return end
         if klik[1]>0 and klik[1]<25 and klik[2]==2 then
             scp(1,10)
             p(systemMessages[43])
-            nowa_nazwa = read()
-            os.setComputerLabel(nowa_nazwa)
+            newName = read()
+            os.setComputerLabel(newName)
         end
         if klik[1]>0 and klik[1]<25 and klik[2]>=3 and klik[2]<=5 then
             r("wget run https://raw.githubusercontent.com/bwisniewski26/nextui/main/update.lua")
@@ -669,16 +670,16 @@ function ust()
 end
 
 function ustawienia()
-	kolor = get_color()
+	color = get_color()
 	scp(1,1)
-	sbc(tonumber(kolor))
+	sbc(tonumber(color))
 	if settings["animations"] == true then
 		for i=1,w,1 do
 		scp(i,1)
 		textutils.slowPrint(" ", 100)
 		end
 	else
-		pfb(1,1,w,1,tonumber(kolor))
+		pfb(1,1,w,1,tonumber(color))
 	end
 	sbc(colors.blue)
 	scp(1,1)
@@ -688,7 +689,7 @@ function ustawienia()
 		textutils.slowPrint(" ", 100)
 		end
 	else
-		pfb(1,1,w,1,tonumber(kolor))
+		pfb(1,1,w,1,tonumber(color))
 	end
 while true do
 	pfb(6,h,w,h,colors.blue)
@@ -728,7 +729,7 @@ while true do
 	scp(39,5)
 	stc(colors.white)
 	p("Device Mgr")
-	klik = mysz()
+	klik = mouseClick()
 	if (klik[1] == w and klik[2] == 1) then break end
 	if klik[1]>0 and klik[1]<6 and klik[2] == h then start() end
 	if klik[1]>2 and klik[1]<14 and klik[2]>3 and klik[2]<7 then stc(colors.white) infust() end
@@ -743,13 +744,13 @@ while true do
 end
 
 function sys()
-kolor = get_color()
-p(kolor)
-draw(tonumber(kolor))
+color = get_color()
+p(color)
+draw(tonumber(color))
 end
 
 function mouse_sys()
-klik = mysz()
+klik = mouseClick()
 scp(1,1)
 if klik[1] ~= nil and klik[2] ~= nil and klik[3] ~= nil then
 	if (klik[1]>1 and klik[1]<20 and klik[2] == 3) then
