@@ -311,7 +311,7 @@ function touch(args)
     elseif args[2] == "dir" then
 	currentDirectory = shell.dir()
         fs.makeDir(fs.combine(currentDirectory, args[1]))
-	if (fse(args[1]) == false) then
+	if (fse(fs.combine(currentDirectory, args[1])) == false) then
 		p("Nie udalo sie utworzyc katalogu")
 	end
     end
