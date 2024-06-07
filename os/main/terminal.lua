@@ -309,7 +309,8 @@ function touch(args)
         file = fs.open(args[1], "w")
         file.close()
     elseif args[2] == "dir" then
-        fs.makeDir(args[1])
+	currentDirectory = shell.dir()
+        fs.makeDir(fs.combine(currentDirectory, args[1]))
 	if (fse(args[1]) == false) then
 		p("Nie udalo sie utworzyc katalogu")
 	end
