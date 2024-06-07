@@ -134,7 +134,7 @@ function verbose()
 	p("Booting in verbose mode...")
 	s(0.5)
 	sp("Checking system folder...")
-	if (fse("/os/main/menu.lua") == false and fse("/os/main/menu")) or fse("/os/main/explorer") == false and fse("/os/main/explorer.lua") == false or fse("/os/luaide") == false then
+	if (fse("/os/main/menu.lua") == false and fse("/os/main/menu")) or fse("/os/main/explorer.lua") == false or fse("/os/luaide") == false then
 		stc(colors.red)
 		p("NextUI system files not found!")
 		s(1)
