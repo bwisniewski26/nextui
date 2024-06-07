@@ -310,6 +310,9 @@ function touch(args)
         file.close()
     elseif args[2] == "dir" then
         fs.makeDir(args[1])
+	if (fse(args[1]) == false) then
+		p("Nie udalo sie utworzyc katalogu")
+	end
     end
     return
 end
@@ -427,6 +430,7 @@ function terminal()
                             shell.setDir(sciezka)
                         else
                             p("Podana sciezka nie istnieje lub nie jest katalogiem.")
+			    shell.setDir("/")
                         end
                     end
                 end
