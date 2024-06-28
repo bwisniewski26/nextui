@@ -84,7 +84,7 @@ function ls(args)
     end
 
     if fse(path) == false or fs.isDir(path) == false then
-        p("Podana sciezka nie istnieje badz jest plikiem.")
+        p("Provided path doesn't exists or is a file.")
         return
     end
 
@@ -114,7 +114,7 @@ end
 
 function bootargs(args)
     if args[1] == nil then
-        p("Zastosowanie: bootargs <argument> <wartosc>")
+        p("Usage: bootargs <argument> <value>")
         return
     else
         bootargst = loadBootargs()
@@ -124,7 +124,7 @@ function bootargs(args)
             elseif args[1] == "shell" then
                 p("Shell: "..tostring(bootargst["shell"]))
             else
-                p("Nieznany argument.")
+                p("Unknown argument.")
             end
             return
         else
@@ -134,7 +134,7 @@ function bootargs(args)
                 elseif args[2] == "false" then
                     bootargst["verbose"] = false
                 else
-                    p("Wartosc musi byc 'true' lub 'false'.")
+                    p("Value must be 'true' or 'false'.")
                     return
                 end
             elseif args[1] == "shell" then
@@ -143,11 +143,11 @@ function bootargs(args)
                 elseif args[2] == "false" then
                     bootargst["shell"] = false
                 else
-                    p("Wartosc musi byc 'true' lub 'false'.")
+                    p("Value must be 'true' or 'false'.")
                     return
                 end
             else
-                p("Nieznany argument.")
+                p("Unknown argument.")
                 return
             end
         end
@@ -162,133 +162,137 @@ function man(command)
     if command == "ls" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[ls - Wyswietla zawartosc katalogu
-Uzycie - ls <argument> <sciezka>
-Argumenty:
--la - Wyswietla rozmiar plikow]]
+        p[[ls - displays directory contents
+Usage - ls <argument> <path>
+Arguments:
+-la - additionally displays file size]]
         scp(1,h)
         write("NextUI 2.1")
     elseif command == "explorer" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[explorer - Uruchamia NextExplorer
-Uzycie - explorer <sciezka>
+        p[[explorer - Launches NextExplorer
+Usage - explorer <path>
 Argumenty:
-sciezka - Sciezka do katalogu, domyslnie: "/"]]
+sciezka - Path to the directory, default path: "/"]]
         scp(1,h)
         write("NextUI 2.1")
     elseif command == "bootargs" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[bootargs - Zarzadza argumentami startowymi
-Uzycie - bootargs <argument> <wartosc>
-Argumenty:
-verbose - Wyswietla dodatkowe informacje podczas startu
-shell - Domyslnie uruchamia terminal]]
+        p[[bootargs - Boot arguments manager
+Usage - bootargs <argument> <value>
+Arguments:
+verbose - Displays additional bootup information, enables system integrity check
+shell - Switches between Terminal Emulator and GUI as default interface]]
     scp(1,h)
     write("NextUI 2.1")
     elseif command == "exit" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[exit - Wyjscie z terminala]]
+        p[[exit - exit from terminal]]
         scp(1,h)
         write("NextUI 2.1")
     elseif command == "reboot" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[reboot - Restartuje komputer]]
+        p[[reboot - reboots your computer]]
         scp(1,h)
         write("NextUI 2.1")
     elseif command == "shutdown" or command == "su" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[shutdown/su - Wylacza komputer]]
+        p[[shutdown/su - shuts down your computer]]
         scp(1,h)
         write("NextUI 2.1")
     elseif command == "help" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[help - Wyswietla pomoc]]
+        p[[help - displays help]]
         scp(1,h)
         write("NextUI 2.1")
     elseif command == "man" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[man - Wyswietla pomoc dla danej komendy
-Uzycie - man <komenda>
-Argumenty:
-komenda - Komenda ktorej pomoc chcemy wyswietlic]]
+        p[[man - launches NextUI Terminal Manual
+Usage - man <command>
+Arguments:
+command - Desired command manual]]
         scp(1,h)
         write("NextUI 2.1")
     elseif command == "menu" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[menu - Uruchamia GUI NextUI]]
+        p[[menu - goes to NextUI GUI]]
         scp(1,h)
         write("NextUI 2.1")
     elseif command == "touch" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[touch - Tworzy plik lub katalog
-Uzycie - touch <plik> <typ>
-Argumenty:
-plik - Nazwa pliku
-typ - file lub dir]]
+        p[[touch - creates empty file or directory
+Usage - touch <filename> <type>
+Arguments:
+filename - New file name
+type - file or dir (directory)]]
         scp(1,h)
         write("NextUI 2.1")
     elseif command == "cd" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[cd - Zmienia katalog
-Uzycie - cd <sciezka>
-Argumenty:
-sciezka - Sciezka do katalogu]]
+        p[[cd - switches to provided directory
+Usage - cd <path>
+Arguments:
+path - path to directory
+Special argument:
+path ".." - goes to the parent directory of current one]]
         scp(1,h)
         write("NextUI 2.1")
     elseif command == "echo" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[echo - Wyswietla tekst
-Uzycie - echo <tekst>
-Argumenty:
-tekst - Tekst do wyswietlenia]]
+        p[[echo - Displays text to the desired output
+Usage - echo <text> <output>
+Arguments:
+text - desired text to display
+output - desired output location, default: standard output (Terminal Emulator)]]
         scp(1,h)
         write("NextUI 2.1")
     elseif command == "clear" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[clear - Czysci ekran
-Uzycie - clear]]
+        p[[clear - clears the display
+Usage - clear]]
         scp(1,h)
         write("NextUI 2.1")
     elseif command == "rm" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[rm - Usuwa plik lub folder
-Uzycie - rm <plik>
-Argumenty:
-plik - Nazwa pliku lub folderu]]
+        p[[rm - deletes file or directory
+Usage - rm <file>
+Arguments:
+file - directory or file name
+Warning! This command doesn't check for importance of selected file. Use with caution and double check name you provide.]]
         scp(1,h)
         write("NextUI 2.1")
     elseif command == "ver" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[ver - Wyswietla wersje systemu]]
+        p[[ver - displays system version]]
         scp(1,h)
         write("NextUI 2.1")
     elseif command == "label" then
         scp(1,1)
         p("NEXTUI TERMINAL MANUAL")
-        p[[label - Ustawia nazwe komputera
-Uzycie - label <nazwa>
-Argumenty:
-nazwa - Nazwa komputera]]
+        p[[label - sets computer label
+Usage - label <name>
+Arguments:
+name - new computer label]]
         scp(1,h)
         write("NextUI 2.1")
     else
-        p("Nieznana komenda.")
+        p("Unknown command.")
     end
-    write(" Nacisnij dowolny klawisz aby wrocic.")
+    write(" Press any key to go back.")
     s(0.1)
     key = os.pullEvent("key")
     tc()
@@ -298,11 +302,11 @@ end
 
 function touch(args)
     if args[1] == nil then
-        p("Zastosowanie: touch <plik> <typ>")
+        p("Usage: touch <file> <type>")
         return
     end
     if fse(args[1]) == true then
-        p("Plik juz istnieje.")
+        p("File exists")
         return
     end
     if args[2] == "file" then
@@ -312,7 +316,7 @@ function touch(args)
 	currentDirectory = shell.dir()
         fs.makeDir(fs.combine(currentDirectory, args[1]))
 	if (fse(fs.combine(currentDirectory, args[1])) == false) then
-		p("Nie udalo sie utworzyc katalogu")
+		p("Could not create directory")
 	end
     end
     return
@@ -320,11 +324,11 @@ end
 
 function rm(args)
     if args[1] == nil then
-        p("Zastosowanie: rm <plik>")
+        p("Usage: rm <file>")
         return
     end
     if fse(args[1]) == false then
-        p("Plik nie istnieje.")
+        p("File doesn't exist")
         return
     end
     fs.delete(args[1])
@@ -333,22 +337,22 @@ end
 
 function help()
     p[[NextUI Shell
-ls - Wyswietla zawartosc katalogu
-explorer - Uruchamia NextExplorer
-bootargs - Zarzadza argumentami startowymi
-exit - Wyjscie z terminala
-reboot - Restartuje komputer
-shutdown/su - Wylacza komputer
-help - Wyswietla pomoc
-man - Wyswietla pomoc dla danej komendy
-menu - Uruchamia GUI NextUI
-touch - Tworzy plik lub katalog
-cd - Zmienia katalog
-echo - Wyswietla tekst
-clear - Czysci ekran
-rm - Usuwa plik lub folder
-ver - Wyswietla wersje systemu
-label - Ustawia nazwe komputera
+ls - displays directory contents
+explorer - launches NextExplorer
+bootargs - manages boot arguments
+exit - exists terminal
+reboot - reboots computer
+shutdown/su - shuts down your computer
+help - displays this menu
+man - displays provided command manual
+menu - launches GUI
+touch - creates file or directory
+cd - changes directory
+echo - displays text
+clear - clears the display
+rm - removes file or directory
+ver - displays system version
+label - sets computer label
 ]]
 end
 
@@ -417,8 +421,13 @@ function terminal()
                 sciezka = "/"
                 os.setDir("/")
             else
-                if args[1] == ".." then
+                if args[1] == ".." and sciezka == "/" then
+                    p("Cannot go to parent directory. Current directory is root.")
+                elseif args[1] == ".." then
+                    p(sciezka)
+                    s(5)
                     sciezka = fs.getDir(sciezka)
+                    
                     shell.setDir(sciezka)
                 else
                     if string.sub(args[1], 1, 1) == "/" then
@@ -430,7 +439,7 @@ function terminal()
                         if fse(sciezka) == true and fs.isDir(sciezka) == true then
                             shell.setDir(sciezka)
                         else
-                            p("Podana sciezka nie istnieje lub nie jest katalogiem.")
+                            p("Provided path does not exist or is not a directory.")
 			    shell.setDir("/")
                         end
                     end
@@ -450,7 +459,7 @@ function terminal()
             p("Terminal Emulator 1.0")
         elseif command == "label" then
             if args[1] == nil then
-                p("Zastosowanie: label <nazwa>")
+                p("Usage: label <name>")
             else
                 os.setComputerLabel(args[1])
             end
@@ -459,7 +468,7 @@ function terminal()
                 r(command)
                 tc()
             else
-                p("Nieznana komenda. Wpisz 'help' aby uzyskac pomoc.")
+                p("Unknown command. Type 'help' for command list.")
             end
         end
     end
