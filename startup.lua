@@ -27,6 +27,7 @@ else
 end
 
 speakerPresent = 0
+modemPresent = 0
 local w, h = term.getSize()
 
 function nilToBrak(str)
