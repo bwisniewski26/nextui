@@ -108,6 +108,7 @@ function showFiles(path, y)
 			stc(colors.white)
 		else
 			if path == "os/main" or file == "startup" then stc(colors.red) end
+			if string.match(file, ".next") then stc(colors.green) end
 			file = string.sub(file, 1, 9)
 			term.write(file)
 			stc(colors.white)

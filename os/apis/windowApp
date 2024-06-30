@@ -1,0 +1,36 @@
+-- NextUI Window Apps extension --
+
+local function s(...) return sleep(...) end
+local function aw(...) return write(...) end
+local function p(...) return print(...) end
+local function tw(...) return term.write(...) end
+local function scp(...) return term.setCursorPos(...) end
+local function sbc(...) return term.setBackgroundColor(...) end
+local function stc(...) return term.setTextColor(...) end
+local function tc(...) return term.clear(...) end
+local function tcl(...) return term.clearLine(...) end
+local function r(...) return shell.run(...) end
+local function sp(...) return textutils.slowPrint(...) end
+local function sw(...) return textutils.slowWrite(...) end
+local function fse(...) return fs.exists(...) end
+local function pul(...) return paintutils.loadImage(...) end
+local function pud(...) return paintutils.drawImage(...) end
+local function pfb(...) return paintutils.drawFilledBox(...) end
+local function su(...) return os.shutdown(...) end
+local function re(...) return os.reboot(...) end
+local function pdp(...) return paintutils.drawPixel(...) end
+
+args = {...}
+w, h = term.getSize()
+
+function windowCreate(name)
+    pfb(1,2,w,2, colors.blue)
+    stc(colors.white)
+    scp(1,2)
+    p(name)
+    pdp(w,2, colors.red)
+    app = window.create(term.current(), 1,3, w, h-3)
+    return app
+end
+
+
